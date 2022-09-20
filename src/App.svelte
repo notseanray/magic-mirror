@@ -19,11 +19,15 @@
     let date;
     let initDate = new Date();
     let holidays = [];
-    let currentWeather = "";
+    let currentWeather = { location:"", data: ""};
     getDate();
     onMount(async () => {
         holidays = await getHolidays(initDate);
-        currentWeather = await weather();
+        weather().then((w) => {
+            if (w) {
+                currentWeather = w;
+            }
+        });
         setCompliment();
         setInterval(() => {
             compliment_rerender = false;
@@ -35,7 +39,9 @@
         }, 1000);
         setInterval(() => {
             weather().then((w) => {
-                currentWeather = w;
+                if (w) {
+                    currentWeather = w;
+                }
             });
         }, 54000);
         setInterval(() => {
@@ -95,13 +101,14 @@
 
 <style>
     .holidayEvent {
-        width: 320px;
+        width: 360px;
+        font-size: 12px;
     }
     .right {
         float: right;
     }
     .holidayLine {
-        width: 320px;
+        width: 360px;
         display: flex;
         border-bottom: 2px solid white;
     }
